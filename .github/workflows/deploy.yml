@@ -48,7 +48,7 @@ jobs:
           VITE_API_PARTNERS_URL: /partners
           VITE_API_PROJECT_ROLES_URL: /role-types
           VITE_API_CHECKPOINTS_URL: /projects/checkpoints
-          VITE_API_BASE_URL: https://project.tpu.ru/dev/api
+          VITE_API_BASE_URL: /dev/api
           VITE_OAUTH_AUTHORIZE_URL: https://oauth.tpu.ru/authorize
           
 
