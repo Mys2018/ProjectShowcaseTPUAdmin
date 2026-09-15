@@ -1,5 +1,5 @@
-import styles from './SettingsLayout.module.css'
 import { Outlet } from "react-router-dom";
+import styles from './SettingsLayout.module.css'
 import { SettingsTabs } from "@/widgets/settings-tabs";
 
 export function SettingsLayout() {

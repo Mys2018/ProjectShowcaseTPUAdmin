@@ -1,5 +1,5 @@
-import styles from './FloatingList.module.css'
 import type { ComponentPropsWithoutRef } from 'react'
+import styles from './FloatingList.module.css'
 
 export function FloatingList({ className, children, ...props }: ComponentPropsWithoutRef<'div'>) {
   return (

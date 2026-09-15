@@ -1,5 +1,5 @@
-import styles from './NavButton.module.css'
 import { NavLink, type LinkProps } from 'react-router-dom'
+import styles from './NavButton.module.css'
 
 interface NavButtonProps extends LinkProps {
   Icon?: React.FC<React.SVGProps<SVGSVGElement>>

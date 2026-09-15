@@ -1,5 +1,5 @@
-import styles from './PartnerSlot.module.css'
 import type { ComponentPropsWithoutRef } from 'react'
+import styles from './PartnerSlot.module.css'
 import type { Partner } from '../model/types'
 
 interface PartnerSlotProps extends ComponentPropsWithoutRef<'div'> {

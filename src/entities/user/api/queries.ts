@@ -1,7 +1,7 @@
+import type { AxiosError } from 'axios'
 import { useQuery, type UseQueryResult } from '@tanstack/react-query'
 import type { User } from '../model/types'
 import type { AuthStatusResponse } from './types'
-import type { AxiosError } from 'axios'
 import { queryKeys } from './queryKeys'
 import { getAuthStatus, getMe, getUsersByName } from './requests'
 import { getUserById } from './requests'

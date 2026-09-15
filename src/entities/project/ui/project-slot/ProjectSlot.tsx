@@ -1,6 +1,6 @@
+import type { ComponentPropsWithoutRef, ReactElement } from 'react'
 import s from './ProjectSlot.module.css'
 import type { Project } from '../../model/types.ts'
-import type { ComponentPropsWithoutRef, ReactElement } from 'react'
 import { getStatusTranslation } from '../../lib/getStatusTranslation.ts'
 import { getTypeTranslation } from '../../lib/getTypeTranslation.ts'
 

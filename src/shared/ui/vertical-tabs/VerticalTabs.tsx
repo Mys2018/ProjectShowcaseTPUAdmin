@@ -1,6 +1,6 @@
 import { NavLink } from 'react-router-dom'
-import styles from './VerticalTabs.module.css'
 import type { ComponentPropsWithoutRef } from 'react'
+import styles from './VerticalTabs.module.css'
 
 export interface TabProps {
   name: string

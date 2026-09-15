@@ -1,6 +1,6 @@
+import { useEffect, useState } from 'react'
 import styles from './Toast.module.css'
 import type { Toast } from '../model/types'
-import { useEffect, useState } from 'react'
 
 interface ToastProps {
   toast: Toast

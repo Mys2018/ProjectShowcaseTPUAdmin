@@ -1,5 +1,5 @@
-import styles from './TagList.module.css'
 import { Fragment } from 'react/jsx-runtime'
+import styles from './TagList.module.css'
 import { TagsSkeleton } from './skeleton/TagsSkeleton'
 import { EditTagButton, RemoveTagButton } from '@/features/manage-tags'
 import { EditTagGroupButton, RemoveTagGroupButton } from '@/features/manage-tag-groups'

@@ -1,5 +1,5 @@
-import styles from './UserSlot.module.css'
 import type { ComponentPropsWithRef } from 'react'
+import styles from './UserSlot.module.css'
 import type { UserBase } from '../../model/types'
 
 export interface UserSlotProps extends ComponentPropsWithRef<'div'> {

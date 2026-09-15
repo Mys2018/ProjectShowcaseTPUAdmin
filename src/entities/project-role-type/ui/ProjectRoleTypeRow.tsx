@@ -1,5 +1,5 @@
-import styles from './ProjectRoleTypeRow.module.css'
 import type { ComponentPropsWithoutRef } from 'react'
+import styles from './ProjectRoleTypeRow.module.css'
 import type { ProjectRoleType } from '../model/types'
 
 interface ProjectRoleTypeRowProps extends ComponentPropsWithoutRef<'div'> {
