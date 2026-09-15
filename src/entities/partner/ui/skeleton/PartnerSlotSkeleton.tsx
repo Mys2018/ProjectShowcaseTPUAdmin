@@ -9,8 +9,8 @@ interface PartnerSlotSkeletonProps {
 
 export function PartnerSlotSkeleton({ isClickable = false, className }: PartnerSlotSkeletonProps) {
   return (
-    <div className={`${styles.container} ${isClickable ? styles.clickable : ''} ${className ?? ''}`}>
-      <div className={styles.mainInfo}>
+    <div className={`${styles.container} ${isClickable ? `${styles.clickable} ${styles2.clickable}` : ''} ${styles2.container} ${className ?? ''}`}>
+      <div className={styles.body}>
         <ImageSkeleton className={styles.avatar} />
         <div className={styles2.description}>
           <TextSkeleton rows={2} />

@@ -1,3 +1,12 @@
+.clickable {
+	cursor: default;
+
+	&:hover,
+	&:active {
+		background-color: var(--sec-color);
+	}
+}
+
 .description {
 	width: 100%;
 
