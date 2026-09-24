@@ -2,10 +2,15 @@
   height: 100vh;
   display: flex;
   background-color: var(--bg-color);
+  overflow: hidden;
 }
 
 .container {
-  width: 100%;
+  flex: 1 1 auto;
+  min-width: 0;
+  min-height: 0;
   height: 100%;
-  padding: 24px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
 }

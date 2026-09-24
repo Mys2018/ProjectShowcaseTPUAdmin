@@ -38,7 +38,7 @@ export default defineConfig({
       }),
       proxy: {
         '/dev/api': {
-          target: 'https://project.tpu.ru',
+          target: 'https://tpu.community.design',
           changeOrigin: true,
           secure: false
         }

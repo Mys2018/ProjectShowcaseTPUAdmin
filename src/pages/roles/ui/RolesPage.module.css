@@ -1,0 +1,103 @@
+.main {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  gap: 12px;
+  padding: 24px;
+  min-height: 0;
+  min-width: 0;
+  box-sizing: border-box;
+  overflow: hidden;
+}
+
+.main > h2 {
+  margin: 0;
+  flex: 0 0 auto;
+}
+
+.hint {
+  margin: 0;
+  color: color-mix(in srgb, var(--text-color) 55%, transparent);
+  font-size: 14px;
+  flex: 0 0 auto;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: 1fr 1.2fr;
+  gap: 20px;
+  flex: 1 1 auto;
+  min-height: 0;
+  min-width: 0;
+}
+
+.panel {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  min-height: 0;
+  min-width: 0;
+}
+
+.panelTitle {
+  font-weight: 700;
+}
+
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  overflow-y: auto;
+  min-height: 0;
+  padding-right: 2px;
+  scrollbar-width: none;
+}
+
+.list::-webkit-scrollbar {
+  width: 0;
+  height: 0;
+  display: none;
+}
+
+.roleItem {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 12px;
+  border-radius: 8px;
+  background: var(--sec-color);
+  border: 1px solid transparent;
+  cursor: pointer;
+  text-align: left;
+  color: inherit;
+  font: inherit;
+}
+
+.roleItemActive {
+  border-color: color-mix(in srgb, var(--primary-color) 50%, var(--outline-color));
+  background: color-mix(in srgb, var(--primary-color) 12%, var(--sec-color));
+}
+
+.actions {
+  display: flex;
+  gap: 7px;
+}
+
+.placeholder {
+  margin: auto;
+  opacity: 0.3;
+}
+
+.forms {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+@media (max-width: 1000px) {
+  .grid {
+    grid-template-columns: 1fr;
+    overflow: auto;
+  }
+}

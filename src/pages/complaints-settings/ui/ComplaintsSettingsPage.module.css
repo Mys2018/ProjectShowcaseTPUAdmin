@@ -1,0 +1,93 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  flex: 1;
+  min-height: 0;
+}
+
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  overflow-y: auto;
+  min-height: 0;
+  padding: 2px 2px;
+  scrollbar-width: none;
+}
+
+.list::-webkit-scrollbar {
+  width: 0;
+  height: 0;
+  display: none;
+}
+
+.row {
+  display: grid;
+  grid-template-columns: 110px 1.4fr 0.7fr 0.7fr 180px;
+  gap: 10px;
+  align-items: center;
+  padding: 12px;
+  background: var(--sec-color);
+  border-radius: 8px;
+}
+
+.head {
+  color: color-mix(in srgb, var(--text-color) 55%, transparent);
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  background: transparent;
+  padding: 0 12px;
+}
+
+.actions {
+  display: flex;
+  gap: 8px;
+  justify-content: flex-end;
+}
+
+.badge {
+  padding: 4px 10px;
+  border-radius: 999px;
+  border: 1px solid var(--outline-color);
+  font-size: 12px;
+  width: fit-content;
+}
+
+.pending {
+  color: var(--orange-color);
+  border-color: color-mix(in srgb, var(--orange-color) 40%, var(--outline-color));
+}
+
+.resolved {
+  color: var(--primary-color);
+  border-color: color-mix(in srgb, var(--primary-color) 40%, var(--outline-color));
+}
+
+.dismissed {
+  color: color-mix(in srgb, var(--text-color) 55%, transparent);
+}
+
+.button {
+  border: none;
+  border-radius: 5px;
+  padding: 6px 12px;
+  cursor: pointer;
+  background: var(--green-20pr);
+}
+
+.danger {
+  background: color-mix(in srgb, var(--red-color) 18%, transparent);
+  color: var(--light-red-color);
+}
+
+.placeholder {
+  margin: auto;
+  opacity: 0.3;
+}
+
+.link {
+  color: var(--text-color);
+  text-decoration: underline;
+}

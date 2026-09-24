@@ -1,12 +1,13 @@
 .container {
-	width: 500px;
+  width: 100%;
+  min-width: 0;
 
-	display: flex; 
-	flex-direction: column;
-	gap: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
 }
 
 .slot {
-	border-radius: 5px;
+  border-radius: 5px;
   padding: 16px;
 }

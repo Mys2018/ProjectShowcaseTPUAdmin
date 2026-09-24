@@ -12,7 +12,9 @@ export const UserPage = () => {
     <main className={styles.main}>
       <h2>Страница пользователя</h2>
       <div className={styles.container}>
-        <UserRolesManager userId={id} />
+        <div className={styles.side}>
+          <UserRolesManager userId={id} />
+        </div>
         <div className={styles.info}>
           <UserProfileInfo userId={id} />
           <UserProjectsList userId={id} />

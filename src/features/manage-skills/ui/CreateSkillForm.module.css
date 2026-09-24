@@ -1,0 +1,15 @@
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.select {
+  width: 100%;
+  border: 1px solid var(--outline-color);
+  background: var(--bg-color);
+  color: var(--text-color);
+  border-radius: var(--border-radius);
+  padding: 10px 12px;
+  font: inherit;
+}

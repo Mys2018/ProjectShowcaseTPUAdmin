@@ -3,13 +3,17 @@ import axios, { AxiosError } from "axios";
 import { ENDPOINTS } from "..";
 
 export const axiosInstance = axios.create({
-  baseURL:
-    import.meta.env.VITE_API_BASE_URL,
+  baseURL: import.meta.env.VITE_API_BASE_URL,
   withCredentials: true,
   headers: {
-    "Content-Type": "application/json",
+    'Content-Type': 'application/json'
   },
-});
+  // Повторяющиеся ключи: status=A&status=B (не status[]=A).
+  // Иначе бэкенд игнорирует фильтры-массивы и отдаёт полный total.
+  paramsSerializer: {
+    indexes: null
+  }
+})
 
 export interface FailedRequest {
   resolve: (token: string | null) => void;

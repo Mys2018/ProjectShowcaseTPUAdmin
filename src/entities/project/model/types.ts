@@ -1,62 +1,104 @@
-/* eslint-disable fsd/no-cross-slice-dependency */
-/* eslint-disable fsd/forbidden-imports */
-import type { Tag } from '@/entities/tag'
-import type { ProjectRoleType } from '@/entities/project-role-type'
-import type { CheckpointGroup } from '@/entities/checkpoint'
+export type ProjectStatus =
+  | 'completed'
+  | 'inprogress'
+  | 'needsrework'
+  | 'notimplemented'
+  | 'pending'
+  | 'recruiting'
+  | 'recruitmentcompleted'
+  | 'rejected'
+  // legacy aliases (mapper may still receive older values)
+  | 'active'
+  | 'approved'
+  | 'archived'
 
-export type ProjectStatus = 'active' | 'approved' | 'rejected' | 'pending' | 'completed' | 'archived'
 export type ProjectType = 'Case' | 'Real' | 'Study'
+
+export type ProjectPartner = {
+  id: string
+  name: string
+  avatarUrl?: string
+}
+
+/** Local VO — avoid entity→entity imports (FSD) */
+export type ProjectTagRef = {
+  id: string
+  name: string
+  groupId: string
+}
+
+export type ProjectRoleTypeRef = {
+  id: string
+  name: string
+}
+
+export type ProjectCheckpointRef = {
+  title: string
+  deadline: Date
+}
+
+export type ProjectCheckpointGroupRef = {
+  id: string
+  title: string
+  checkpoints: ProjectCheckpointRef[]
+}
 
 export type Project = {
   type: ProjectType
   id: string
   ownerId: string
-  partnerId: string
+  partner: ProjectPartner
   status: ProjectStatus
   meta: {
     title: string
     description: string
   }
-  checkpointGroup: CheckpointGroup
+  checkpointGroup: ProjectCheckpointGroupRef
+  customCheckpoints?: ProjectCheckpointRef[]
   roles?: {
     roleId: string
-    roleType: ProjectRoleType
+    roleType: ProjectRoleTypeRef
     placesCount: number
     minPlacesCount: number
     studentIds: string[]
     skills: {
       skillId: string
       skillName: string
-    }[] // TODO change to skill entity
-    meta: {
-      description: string
-    }
+    }[]
+    applicationsCount?: number
   }[]
-  primaryTag: Tag
-  tags?: Tag[]
+  primaryTag: ProjectTagRef
+  tags?: ProjectTagRef[]
   prdMeta: StudyProjectPrdDto | CaseProjectPrdDto | RealProjectPrdDto
   isPromoted: boolean
   isLikedByMe?: boolean
 }
 
 export type ProjectDto = {
-  type: ProjectType
   id: string
   ownerId: number
-  partnerId: string
-  status: Uppercase<ProjectStatus>
+  partner?: {
+    projectPartnerId: string
+    name: string
+    profilePicture?: string
+  } | null
+  status: string
   meta: {
     title: string
     description: string
   }
-  checkpoints: {
+  checkpoints?: {
     id: string
-    name: string
-    checkpoints: {
+    name?: string
+    checkpoints?: {
       title: string
       deadline: string
     }[]
-  }
+  } | null
+  customCheckpoints?: {
+    title: string
+    deadline: string
+  }[]
   roles?: {
     roleId: string
     roleType: {
@@ -65,20 +107,22 @@ export type ProjectDto = {
     }
     placesCount: number
     minPlacesCount: number
-    places: string[]
-    skills: {
+    places?: number[]
+    skills?: {
       skillId: string
       skillName: string
+      roleTypeId?: string
     }[]
-    meta: {
-      description: string
+    applicationsCount?: number
+    meta?: {
+      description?: string
     }
   }[]
-  primaryTag: {
+  primaryTag?: {
     tagId: string
     tagName: string
     groupId: string
-  }
+  } | null
   tags?: {
     tagId: string
     tagName: string
@@ -87,24 +131,27 @@ export type ProjectDto = {
   prdMeta: StudyProjectPrdDto | CaseProjectPrdDto | RealProjectPrdDto
   isPromoted: boolean
   isLikedByMe?: boolean
+  repository?: { platformId: string; name: string; url: string }[]
+  taskTracker?: { platformId: string; name: string; url: string }[]
+  otherPlatforms?: { platformId: string; name: string; url: string }[]
 }
 
 type StudyProjectPrdDto = {
   prerequisites: string
   projectGoal: string
-  keyFunctionality: string[]
+  keyFunctionality?: string[]
 }
 
 type CaseProjectPrdDto = {
   prerequisites: string
-  audience: {
+  audience?: {
     title: string
-    minAge: number
-    maxAge: number
+    minAge?: number
+    maxAge?: number
     description: string
   }[]
   projectGoal: string
-  functional: string[]
+  functional?: string[]
   problemStatement: string
 }
 
@@ -112,14 +159,16 @@ type RealProjectPrdDto = {
   businessGoal: string
   productVision: string
   projectGoal: string
-  audience: {
+  audience?: {
     title: string
-    minAge: number
-    maxAge: number
+    minAge?: number
+    maxAge?: number
     description: string
   }[]
-  businessMetrics: string[]
-  functional: string[]
-  nonFunctional: string[]
-  projectPlan: string[]
+  businessMetrics?: string[]
+  functional?: string[]
+  nonFunctional?: string[]
+  projectPlan?: string[]
 }
+
+export type { StudyProjectPrdDto, CaseProjectPrdDto, RealProjectPrdDto }

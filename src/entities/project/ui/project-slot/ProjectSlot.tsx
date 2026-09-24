@@ -10,19 +10,28 @@ interface ProjectSlotProps extends ComponentPropsWithoutRef<'div'> {
   isClickable?: boolean
 }
 
-export const ProjectSlot = ({ project, partnerElement, isClickable = false, className, children, ...props }: ProjectSlotProps) => {
+export const ProjectSlot = ({
+  project,
+  partnerElement,
+  isClickable = false,
+  className,
+  children,
+  ...props
+}: ProjectSlotProps) => {
   const tagsAmount = project.tags?.length || 0
   return (
     <div className={`${s.container} ${isClickable ? s.clickable : ''} ${className ?? ''}`} {...props}>
       <div className={s.header}>
         <div className={s.upper}>
-          <h6 className={s.title}>{project.meta.title}</h6>
+          <h6 className={s.title} title={project.meta.title}>
+            {project.meta.title}
+          </h6>
           <div className={s.tag}>
-            <p>{project.primaryTag.name}</p>
-            {tagsAmount && (
+            <p className={s.tagText}>{project.primaryTag.name}</p>
+            {tagsAmount > 0 && (
               <>
                 <span className={s.dot} />
-                <p>Ещё +{tagsAmount}</p>
+                <p className={s.tagText}>Ещё +{tagsAmount}</p>
               </>
             )}
           </div>
@@ -30,20 +39,19 @@ export const ProjectSlot = ({ project, partnerElement, isClickable = false, clas
         <div className={s.lower}>
           <p className={`${s.status} ${s[project.status]}`}>{getStatusTranslation(project.status)}</p>
           <span className={s.dot} />
-          <p>{getTypeTranslation(project.type)}</p>
+          <p className={s.metaItem}>{getTypeTranslation(project.type)}</p>
           <span className={s.dot} />
           <p className={s.ellipsis} title={project.id}>
             {project.id}
           </p>
         </div>
       </div>
-      {partnerElement ||
-        (children && (
-          <div className={s.footer}>
-            {partnerElement}
-            {children}
-          </div>
-        ))}
+      {(partnerElement || children) && (
+        <div className={s.footer}>
+          {partnerElement}
+          {children}
+        </div>
+      )}
     </div>
   )
 }

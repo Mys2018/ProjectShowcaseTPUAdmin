@@ -1,0 +1,138 @@
+.main {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 24px;
+  height: 100%;
+  min-height: 0;
+  min-width: 0;
+  box-sizing: border-box;
+  overflow: auto;
+  scrollbar-width: none;
+}
+
+.main::-webkit-scrollbar {
+  width: 0;
+  height: 0;
+  display: none;
+}
+
+.main > h2 {
+  margin: 0;
+}
+
+.lead {
+  margin: 0;
+  max-width: 720px;
+  color: color-mix(in srgb, var(--text-color) 60%, transparent);
+  line-height: 1.45;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: 1.4fr 1fr;
+  gap: 16px;
+  align-items: start;
+}
+
+@media (max-width: 1100px) {
+  .grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.card {
+  min-width: 0;
+}
+
+.kpiRow {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.kpi {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 12px;
+  border-radius: 8px;
+  background: var(--bg-color);
+}
+
+.kpiLabel {
+  font-size: 12px;
+  color: color-mix(in srgb, var(--text-color) 55%, transparent);
+}
+
+.kpi strong {
+  font-size: 22px;
+}
+
+.good {
+  color: var(--primary-color);
+}
+
+.warn {
+  color: var(--orange-color);
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+}
+
+.table th,
+.table td {
+  text-align: left;
+  padding: 8px 6px;
+  border-bottom: 1px solid var(--outline-color);
+}
+
+.table th {
+  color: color-mix(in srgb, var(--text-color) 55%, transparent);
+  font-weight: 600;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.num {
+  font-variant-numeric: tabular-nums;
+  font-weight: 600;
+}
+
+.link {
+  color: var(--primary-color);
+  text-decoration: none;
+}
+
+.link:hover {
+  text-decoration: underline;
+}
+
+.hint {
+  margin: 0;
+  font-size: 13px;
+  color: color-mix(in srgb, var(--text-color) 55%, transparent);
+  line-height: 1.45;
+}
+
+.more {
+  display: inline-block;
+  margin-top: 12px;
+  color: var(--primary-color);
+  text-decoration: none;
+  font-size: 14px;
+}
+
+.more:hover {
+  text-decoration: underline;
+}
+
+.error {
+  margin: 0;
+  color: var(--red-color);
+}

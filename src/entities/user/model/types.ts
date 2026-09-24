@@ -1,18 +1,31 @@
 /* eslint-disable @typescript-eslint/no-empty-object-type */
+export type UserMessengers = {
+  telegram?: string
+  vk?: string
+  element?: string
+}
+
+export type UserCompetency = {
+  id: string
+  name: string
+  skills: {
+    id: string
+    name: string
+  }[]
+}
+
 export type User = UserBase & {
   meta: {
+    name: string
     bio: string
-    competencies: {
-      id: string
-      name: string
-      skills: {
-        id: string
-        name: string
-      }[]
-    }[]
-    experience: string
+    competencies: UserCompetency[]
+    messengers: UserMessengers
+    portfolioLink?: string
+    interests?: string
+    /** @deprecated API UserMeta не содержит experience — оставлено для совместимости */
+    experience?: string
   }
-  capabilities: string[] // по хорошему заменить на юнион
+  capabilities: string[]
 }
 
 export type UserBase = {
@@ -44,7 +57,8 @@ export type UserDto = {
   meta: {
     firstName: string
     lastName: string
-    bio: string
+    patronym?: string
+    bio?: string
     skills?: {
       roleTypeId: string
       roleTypeName: string
@@ -53,7 +67,10 @@ export type UserDto = {
         skillName: string
       }[]
     }[]
-    experience: string
+    messengers?: UserMessengers
+    portfolioLink?: string
+    interests?: string
+    experience?: string
   }
   roles: {
     Default?: {}
@@ -63,18 +80,28 @@ export type UserDto = {
       meta: {
         group: string
       }
-    },
-    Admin?: {},
-    Curator?: {},
-    Mentor?: {},
-    Moderator?: {},
-    Roop?: {},
-    Teacher?: {},
+    }
+    Admin?: {}
+    Curator?: {}
+    Mentor?: {}
+    Moderator?: {}
+    Roop?: {}
+    Teacher?: {}
   }
 }
 
+export type StudentScore = {
+  userId: string
+  totalScore: number
+}
+
+export type StudentScoreDto = {
+  userId: number
+  totalScore: number
+}
+
 type Role<T> = {
-  [K in keyof Required<T>]: { type: K, weight: number } & T[K]
+  [K in keyof Required<T>]: { type: K; weight: number } & T[K]
 }[keyof Required<T>]
 
 export type UserRole = Role<UserDto['roles']>

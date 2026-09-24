@@ -1,13 +1,137 @@
 .container {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 16px;
 
   padding: 16px;
-  border-radius: 5px;
+  border-radius: 8px;
   background-color: var(--sec-color);
+  min-width: 0;
+}
+
+.block {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-width: 0;
 }
 
 .title {
+  margin: 0;
   color: var(--blue-grey-color);
+  font-size: 13px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.text {
+  margin: 0;
+  white-space: pre-wrap;
+  word-break: break-word;
+  line-height: 1.45;
+}
+
+.muted {
+  color: color-mix(in srgb, var(--text-color) 55%, transparent);
+  font-size: 13px;
+}
+
+.kv {
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.kv > div {
+  display: grid;
+  grid-template-columns: 120px 1fr;
+  gap: 8px;
+  min-width: 0;
+}
+
+.kv dt {
+  color: color-mix(in srgb, var(--text-color) 55%, transparent);
+  font-size: 13px;
+}
+
+.kv dd {
+  margin: 0;
+  min-width: 0;
+  word-break: break-word;
+}
+
+.link {
+  color: var(--primary-color);
+  text-decoration: none;
+  word-break: break-all;
+}
+
+.link:hover {
+  text-decoration: underline;
+}
+
+.contactList {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.contactItem {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  min-width: 0;
+}
+
+.contactLabel {
+  color: color-mix(in srgb, var(--text-color) 55%, transparent);
+  min-width: 72px;
+}
+
+.competencyList {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.competency {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 10px;
+  border-radius: 8px;
+  background: var(--bg-color);
+}
+
+.competencyName {
+  font-weight: 600;
+}
+
+.skillList {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.skill {
+  padding: 4px 10px;
+  border-radius: 999px;
+  border: 1px solid var(--outline-color);
+  font-size: 12px;
+  background: color-mix(in srgb, var(--primary-color) 12%, transparent);
+}
+
+.score {
+  margin: 0;
+  font-size: 28px;
+  font-weight: 700;
+  color: var(--primary-color);
 }

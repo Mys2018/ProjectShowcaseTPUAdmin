@@ -1,9 +1,24 @@
 export { queryKeys as userKeys } from './api/queryKeys'
-export { login, logout, putUserRole, deleteUserRole } from './api/requests'
-export { useAuthStatus, useMe, useUsersByName, useUserById } from './api/queries'
+export { login, logout, putUserRole, deleteUserRole, getUserScores } from './api/requests'
+export {
+  useAuthStatus,
+  useMe,
+  useUsersByName,
+  useUserById,
+  useUserScores
+} from './api/queries'
 export { type AuthStatusResponse, type OAuthExchangeParams } from './api/types'
 export { useAuthStore } from './model/store/useAuthStore'
-export { type User, type UserBase, type UserRole } from './model/types'
+export {
+  type User,
+  type UserBase,
+  type UserBaseDto,
+  type UserRole,
+  type UserMessengers,
+  type UserCompetency,
+  type StudentScore
+} from './model/types'
+export { mapUserBaseDto, mapUserDto, mapStudentScoreDto } from './lib/mappers'
 export * from './ui/UserSlot'
 export * from './ui/UserInfo'
 export { getHighestRole } from './lib/getHighestRole'

@@ -1,19 +1,30 @@
+import { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import styles from './UserProjectsList.module.css'
 import { ProjectSlot, useUserProjects } from '@/entities/project'
-import { Pagination, ScrollableList, SearchInput, useQueryFilters, useQuerySync } from '@/shared'
+import {
+  Pagination,
+  projectPath,
+  ScrollableList,
+  SearchInput,
+  useDebounce
+} from '@/shared'
 
 interface UserProjectsListProps {
   userId: string
 }
 
 export function UserProjectsList({ userId }: UserProjectsListProps) {
-  const { page, setPage, limit, offset, query, setQuery } = useQueryFilters()
-  const [localQuery, setLocalQuery] = useQuerySync(query, setQuery)
+  const navigate = useNavigate()
+  const [localQuery, setLocalQuery] = useState('')
+  const [page, setPage] = useState(1)
+  const limit = 10
+  const query = useDebounce(localQuery, 300)
 
   const { data, isSuccess, isLoading, isError } = useUserProjects(userId, {
     query: query.toLowerCase(),
-    offset: offset,
-    limit: limit
+    offset: (page - 1) * limit,
+    limit
   })
   const { projects, total } = data || { projects: [], total: 0 }
 
@@ -22,11 +33,18 @@ export function UserProjectsList({ userId }: UserProjectsListProps) {
   return (
     <div className={styles.container}>
       <p className={styles.title}>Проекты пользователя</p>
+      <p className={styles.hint}>Созданные и проекты, где пользователь в команде</p>
       <div className={styles.projectSearch}>
         <SearchInput
           value={localQuery}
-          onChange={e => setLocalQuery(e.target.value)}
-          onClear={() => setLocalQuery('')}
+          onChange={e => {
+            setLocalQuery(e.target.value)
+            setPage(1)
+          }}
+          onClear={() => {
+            setLocalQuery('')
+            setPage(1)
+          }}
           placeholder={'Найти проект...'}
         />
         <ScrollableList>
@@ -35,10 +53,21 @@ export function UserProjectsList({ userId }: UserProjectsListProps) {
           {isSuccess && projects.length === 0 ? (
             <h3 className={styles.placeholder}>Ничего не нашлось!</h3>
           ) : (
-            projects.map(project => <ProjectSlot key={project.id} project={project} onClick={() => {}} />)
+            projects.map(project => (
+              <ProjectSlot
+                key={project.id}
+                project={project}
+                isClickable
+                onClick={() => {
+                  void navigate(projectPath(project.id))
+                }}
+              />
+            ))
           )}
         </ScrollableList>
-        {totalPages !== 1 && <Pagination currentPage={page} totalPages={totalPages} onPageSelect={setPage} />}
+        {totalPages > 1 && (
+          <Pagination currentPage={page} totalPages={totalPages} onPageSelect={setPage} />
+        )}
       </div>
     </div>
   )

@@ -1,6 +1,13 @@
 import type { AuthStatusResponse, GetUsersResponse, OAuthExchangeParams } from './types'
-import type { User, UserBase, UserDto, UserRole } from '../model/types'
-import { mapUserBaseDto, mapUserDto } from '../lib/mappers'
+import type {
+  StudentScore,
+  StudentScoreDto,
+  User,
+  UserBase,
+  UserDto,
+  UserRole
+} from '../model/types'
+import { mapStudentScoreDto, mapUserBaseDto, mapUserDto } from '../lib/mappers'
 import { api, ENDPOINTS } from '@/shared'
 
 export async function login(params: OAuthExchangeParams): Promise<void> {
@@ -46,4 +53,9 @@ export async function putUserRole<T extends UserRole['type']>(
 
 export async function deleteUserRole(userId: string, type: UserRole['type']): Promise<void> {
   await api.delete(ENDPOINTS.USER_ROLES(userId, type))
+}
+
+export async function getUserScores(userId: string): Promise<StudentScore> {
+  const { data } = await api.get<StudentScoreDto>(ENDPOINTS.USER_SCORES(userId))
+  return mapStudentScoreDto(data)
 }

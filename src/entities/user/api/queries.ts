@@ -3,8 +3,7 @@ import { useQuery, type UseQueryResult } from '@tanstack/react-query'
 import type { User } from '../model/types'
 import type { AuthStatusResponse } from './types'
 import { queryKeys } from './queryKeys'
-import { getAuthStatus, getMe, getUsersByName } from './requests'
-import { getUserById } from './requests'
+import { getAuthStatus, getMe, getUserById, getUserScores, getUsersByName } from './requests'
 
 export const useAuthStatus = (enabled = true): UseQueryResult<AuthStatusResponse, AxiosError> => {
   return useQuery({
@@ -36,12 +35,27 @@ export const useUserById = (userId: string | undefined) => {
   })
 }
 
-export const useUsersByName = (query: string, offset: number, limit: number, enabled: boolean = true) => {
+export const useUsersByName = (
+  query: string,
+  offset: number,
+  limit: number,
+  enabled: boolean = true
+) => {
   const trimmedQuery = query.trim()
   return useQuery({
     queryKey: queryKeys.search(trimmedQuery, offset, limit),
     queryFn: () => getUsersByName(trimmedQuery, offset, limit),
     enabled: enabled,
-    staleTime: 60 * 1000 // 1 min, может вынести в queryClient?
+    staleTime: 60 * 1000
+  })
+}
+
+export const useUserScores = (userId: string | undefined, enabled = true) => {
+  return useQuery({
+    queryKey: queryKeys.scores(userId ?? ''),
+    queryFn: () => getUserScores(userId!),
+    enabled: enabled && Boolean(userId),
+    staleTime: 60 * 1000,
+    retry: false
   })
 }

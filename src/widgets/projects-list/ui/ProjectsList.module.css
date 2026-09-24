@@ -1,23 +1,28 @@
 .container {
   height: 100%;
-
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-
-.projectsList {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  overflow-y: auto;
+  min-width: 0;
   min-height: 0;
+
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
 }
 
-.projectSlot {
-  background-color: var(--sec-color);
-  padding: 8px;
-  border-radius: 8px;
+.filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.select {
+  flex: 1 1 140px;
+  min-width: 0;
+  border: 1px solid var(--outline-color);
+  background: var(--bg-color);
+  color: var(--text-color);
+  border-radius: var(--border-radius);
+  padding: 8px 10px;
+  font: inherit;
 }
 
 .placeholder {

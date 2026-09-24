@@ -5,16 +5,24 @@ import { TextSkeleton } from '@/shared'
 export function UserInfoSkeleton() {
   return (
     <div className={`${styles.container}`}>
-      <p className={styles.title}>Почта:</p>
-      <TextSkeleton />
-      <p className={styles.title}>Биография:</p>
-      <div className={s.description}>
-        <TextSkeleton rows={2} />
-      </div>
-      <p className={styles.title}>Скиллы:</p>
-      <TextSkeleton />
-      <p className={styles.title}>Опыт:</p>
-      <TextSkeleton />
+      <section className={styles.block}>
+        <p className={styles.title}>Контакты</p>
+        <TextSkeleton />
+      </section>
+      <section className={styles.block}>
+        <p className={styles.title}>О себе</p>
+        <div className={s.description}>
+          <TextSkeleton rows={2} />
+        </div>
+      </section>
+      <section className={styles.block}>
+        <p className={styles.title}>Интересы</p>
+        <TextSkeleton />
+      </section>
+      <section className={styles.block}>
+        <p className={styles.title}>Компетенции и скиллы</p>
+        <TextSkeleton />
+      </section>
     </div>
   )
 }

@@ -1,0 +1,198 @@
+.main {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+  padding: 24px;
+  gap: 16px;
+  overflow: auto;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.titleBlock {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.meta {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: color-mix(in srgb, var(--text-color) 60%, transparent);
+  font-size: 14px;
+}
+
+.dot {
+  aspect-ratio: 1;
+  height: 4px;
+  border-radius: 50%;
+  background-color: color-mix(in srgb, var(--text-color) 60%, transparent);
+}
+
+.actions {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: 1.4fr 1fr;
+  gap: 16px;
+}
+
+@media (max-width: 1100px) {
+  .grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.stack {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.kv {
+  display: grid;
+  grid-template-columns: 140px 1fr;
+  gap: 8px;
+  padding: 8px 0;
+  border-bottom: 1px solid var(--outline-color);
+  font-size: 14px;
+}
+
+.kv:last-child {
+  border-bottom: none;
+}
+
+.kv dt {
+  color: color-mix(in srgb, var(--text-color) 60%, transparent);
+}
+
+.badgeList {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.badge {
+  padding: 4px 10px;
+  border-radius: 999px;
+  border: 1px solid var(--outline-color);
+  font-size: 12px;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.select,
+.textarea {
+  width: 100%;
+  border: 1px solid var(--outline-color);
+  background: var(--bg-color);
+  color: var(--text-color);
+  border-radius: var(--border-radius);
+  padding: 10px 12px;
+  font: inherit;
+}
+
+.textarea {
+  min-height: 90px;
+  resize: vertical;
+}
+
+.hint {
+  font-size: 12px;
+  color: color-mix(in srgb, var(--text-color) 55%, transparent);
+}
+
+.error {
+  color: var(--red-color);
+  font-size: 13px;
+}
+
+.teamRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 10px;
+  background: var(--bg-color);
+  border-radius: 8px;
+}
+
+.teamInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.teamName {
+  font-weight: 600;
+}
+
+.teamEmail {
+  font-size: 13px;
+  color: color-mix(in srgb, var(--text-color) 60%, transparent);
+}
+
+.danger {
+  background: color-mix(in srgb, var(--red-color) 18%, transparent);
+  color: var(--light-red-color);
+  border: none;
+  border-radius: 5px;
+  padding: 6px 12px;
+  cursor: pointer;
+}
+
+.ghost {
+  background: transparent;
+  border: 1px solid var(--outline-color);
+  color: var(--text-color);
+  border-radius: 5px;
+  padding: 6px 12px;
+  cursor: pointer;
+}
+
+.roleRow {
+  display: grid;
+  grid-template-columns: 1.4fr 0.7fr 0.5fr 1fr;
+  gap: 8px;
+  padding: 8px 0;
+  border-bottom: 1px solid var(--outline-color);
+  font-size: 14px;
+}
+
+.roleHead {
+  color: color-mix(in srgb, var(--text-color) 55%, transparent);
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.placeholder {
+  opacity: 0.4;
+  margin: auto;
+}
+
+.back {
+  background: transparent;
+  border: none;
+  color: color-mix(in srgb, var(--text-color) 70%, transparent);
+  cursor: pointer;
+  width: fit-content;
+  padding: 0;
+}

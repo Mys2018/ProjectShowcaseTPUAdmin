@@ -1,5 +1,7 @@
 .container {
   min-width: 0;
+  width: 100%;
+  box-sizing: border-box;
 
   display: flex;
   flex-direction: column;
@@ -33,16 +35,26 @@
 }
 
 .upper {
+  min-width: 0;
   display: flex;
   justify-content: space-between;
-  gap: 5px;
+  align-items: flex-start;
+  gap: 8px;
 }
 
 .title {
+  margin: 0;
+  min-width: 0;
+  flex: 1 1 auto;
   font-weight: 700;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .tag {
+  flex: 0 0 auto;
+  max-width: 45%;
   display: flex;
   align-items: center;
   gap: 5px;
@@ -53,18 +65,25 @@
   border-radius: 100px;
   border: var(--text-color) solid 1px;
 
-  text-wrap-mode: nowrap;
-
-  & p {
-    font-size: 12px;
-  }
+  min-width: 0;
+  overflow: hidden;
 
   & .dot {
     background-color: var(--text-color);
+    flex-shrink: 0;
   }
 }
 
+.tagText {
+  margin: 0;
+  font-size: 12px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
 .dot {
+  flex-shrink: 0;
   aspect-ratio: 1;
   height: 4px;
   border-radius: 50%;
@@ -81,18 +100,33 @@
   color: color-mix(in srgb, var(--text-color) 60%, transparent);
 }
 
+.metaItem {
+  margin: 0;
+  flex-shrink: 0;
+  white-space: nowrap;
+}
+
 .status {
-  &.active,
+  margin: 0;
+  flex-shrink: 0;
+  white-space: nowrap;
+
+  &.completed,
   &.approved,
-  &.completed {
+  &.active,
+  &.inprogress,
+  &.recruiting,
+  &.recruitmentcompleted {
     color: var(--primary-color);
   }
 
-  &.archived {
+  &.archived,
+  &.notimplemented {
     color: color-mix(in srgb, var(--text-color) 60%, transparent);
   }
 
-  &.pending {
+  &.pending,
+  &.needsrework {
     color: var(--orange-color);
   }
 
@@ -102,6 +136,9 @@
 }
 
 .ellipsis {
+  margin: 0;
+  min-width: 0;
+  flex: 1 1 auto;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -112,4 +149,5 @@
   align-items: center;
   justify-content: space-between;
   gap: 5px;
+  min-width: 0;
 }
