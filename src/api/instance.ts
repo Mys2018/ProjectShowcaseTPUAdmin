@@ -1,4 +1,6 @@
 import { ENDPOINTS } from '@/config/endpoints';
+import { emitSessionExpired } from '@/api/sessionEvents';
+import { getApiError } from '@/api/errors';
 import axios, { AxiosError } from 'axios';
 import type { InternalAxiosRequestConfig } from 'axios';
 
@@ -11,66 +13,68 @@ export const axiosInstance = axios.create({
 });
 
 interface FailedRequest {
-  resolve: (token: string | null) => void;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  reject: (error: any) => void;
+  resolve: (value?: unknown) => void;
+  reject: (error: unknown) => void;
 }
 
 let isRefreshing = false;
 let failedQueue: FailedRequest[] = [];
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-const processQueue = (error: any, token: string | null = null) => {
+const processQueue = (error: unknown = null) => {
   failedQueue.forEach((prom) => {
     if (error) {
       prom.reject(error);
     } else {
-      prom.resolve(token);
+      prom.resolve();
     }
   });
   failedQueue = [];
 };
 
+function shouldTryRefresh(error: AxiosError, originalRequest: InternalAxiosRequestConfig & { _retry?: boolean }) {
+  if (originalRequest._retry) return false;
+  const status = error.response?.status;
+  if (status === 401) return true;
+  if (status !== 403) return false;
+  const api = getApiError(error);
+  if (!api) return false;
+  return ['INVALID_COOKIE', 'SESSION_NOT_FOUND', 'AUTHORIZATION_FAILED'].includes(
+    api.code,
+  );
+}
+
 axiosInstance.interceptors.response.use(
   (response) => response,
   async (error: AxiosError) => {
-    const originalRequest = error.config as InternalAxiosRequestConfig & { _retry?: boolean };
+    const originalRequest = error.config as InternalAxiosRequestConfig & {
+      _retry?: boolean;
+    };
 
-    if (error.response?.status === 401 && !originalRequest._retry) {
-  
-      if (isRefreshing) {
-        return new Promise((resolve, reject) => {
-          failedQueue.push({ resolve, reject });
-        })
-          .then(() => axiosInstance(originalRequest))
-          .catch((err) => Promise.reject(err));
-      }
-
-      originalRequest._retry = true;
-      isRefreshing = true;
-
-      try {
-
-        await axios.post(
-          `${import.meta.env.VITE_API_BASE_URL}${ENDPOINTS.REFRESH}`, 
-          {}, 
-          { withCredentials: true }
-        );
-
-        processQueue(null);
-        return axiosInstance(originalRequest);
-      } catch (refreshError) {
-
-        processQueue(refreshError, null);
-        return Promise.reject(refreshError);
-
-      } finally {
-
-        isRefreshing = false;
-
-      }
+    if (!originalRequest || !shouldTryRefresh(error, originalRequest)) {
+      return Promise.reject(error);
     }
 
-    return Promise.reject(error);
-  }
+    if (isRefreshing) {
+      return new Promise((resolve, reject) => {
+        failedQueue.push({ resolve, reject });
+      })
+        .then(() => axiosInstance(originalRequest))
+        .catch((err) => Promise.reject(err));
+    }
+
+    originalRequest._retry = true;
+    isRefreshing = true;
+
+    try {
+      await axiosInstance.post(ENDPOINTS.REFRESH, {});
+      processQueue(null);
+      return axiosInstance(originalRequest);
+    } catch (refreshError) {
+      processQueue(refreshError);
+      emitSessionExpired();
+      return Promise.reject(refreshError);
+    } finally {
+      isRefreshing = false;
+    }
+  },
 );

@@ -1,11 +1,17 @@
-import {useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import type { UseMutationResult, UseQueryResult} from '@tanstack/react-query';
+import {
+  useMutation,
+  useQuery,
+  useQueryClient,
+  type UseMutationResult,
+  type UseQueryResult,
+} from '@tanstack/react-query';
 import { authRequests } from './auth.requests';
 import { authKeys } from '../config/cacheKeys';
 import { pkceService } from '../utils/pkce';
-import type { AuthResponse, OAuthExchangeParams } from '../types';
+import type { OAuthExchangeParams } from '../types';
 import type { User } from '@/types';
-import { AxiosError } from 'axios';
+import type { AxiosError } from 'axios';
+import { useAuthStore } from '../store/useAuthStore';
 
 export const authQueries = {
   useMe: (enabled = true): UseQueryResult<User, AxiosError> => {
@@ -18,12 +24,16 @@ export const authQueries = {
     });
   },
 
-  useLogin: (): UseMutationResult<AuthResponse, AxiosError, OAuthExchangeParams> => {
+  useLogin: (): UseMutationResult<User, AxiosError, OAuthExchangeParams> => {
     const queryClient = useQueryClient();
     return useMutation({
-      mutationFn: authRequests.login,
-      onSuccess: (data) => {
-        queryClient.setQueryData(authKeys.me(), data.user);
+      mutationFn: async (params) => {
+        await authRequests.login(params);
+        return authRequests.getMe();
+      },
+      onSuccess: (user) => {
+        useAuthStore.getState().setLoggedOut(false);
+        queryClient.setQueryData(authKeys.me(), user);
         pkceService.clear();
       },
     });
@@ -33,9 +43,10 @@ export const authQueries = {
     const queryClient = useQueryClient();
     return useMutation({
       mutationFn: authRequests.logout,
-      onSuccess: () => {
+      onSettled: () => {
+        useAuthStore.getState().setLoggedOut(true);
         queryClient.clear();
       },
     });
-  }
+  },
 };

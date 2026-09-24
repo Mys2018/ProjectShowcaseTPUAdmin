@@ -2,21 +2,30 @@
   --bg-color: rgb(246, 245, 248);
   --text-color: rgb(15, 23, 42);
   --primary-color: rgb(40, 190, 70);
+  --primary-hover: rgb(34, 165, 60);
   --sec-color: rgb(255, 255, 255);
   --outline-color: rgb(224, 224, 224);
+  --muted-text: rgb(100, 116, 139);
+  --danger-color: rgb(220, 38, 38);
+  --warning-color: rgb(217, 119, 6);
+  --info-color: rgb(37, 99, 235);
+  --shadow-sm: 0 1px 2px rgba(15, 23, 42, 0.06);
+  --shadow-md: 0 8px 24px rgba(15, 23, 42, 0.08);
 }
 
-
 @media (prefers-color-scheme: light) {
-
-  :root {
+  :root:not(.theme-dark) {
     --bg-color: rgb(246, 245, 248);
     --text-color: rgb(15, 23, 42);
     --primary-color: rgb(40, 190, 70);
+    --primary-hover: rgb(34, 165, 60);
     --sec-color: rgb(255, 255, 255);
     --outline-color: rgb(224, 224, 224);
+    --muted-text: rgb(100, 116, 139);
+    --danger-color: rgb(220, 38, 38);
+    --warning-color: rgb(217, 119, 6);
+    --info-color: rgb(37, 99, 235);
+    --shadow-sm: 0 1px 2px rgba(15, 23, 42, 0.06);
+    --shadow-md: 0 8px 24px rgba(15, 23, 42, 0.08);
   }
-
 }
-
-

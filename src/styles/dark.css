@@ -2,6 +2,13 @@
   --bg-color: rgb(26, 26, 26);
   --text-color: rgb(241, 245, 249);
   --primary-color: rgb(40, 190, 70);
+  --primary-hover: rgb(34, 165, 60);
   --sec-color: rgb(36, 36, 36);
   --outline-color: rgb(48, 48, 48);
+  --muted-text: rgb(148, 163, 184);
+  --danger-color: rgb(239, 68, 68);
+  --warning-color: rgb(245, 158, 11);
+  --info-color: rgb(59, 130, 246);
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.2);
+  --shadow-md: 0 8px 24px rgba(0, 0, 0, 0.25);
 }
