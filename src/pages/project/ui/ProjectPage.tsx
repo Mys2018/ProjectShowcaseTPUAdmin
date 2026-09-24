@@ -175,21 +175,26 @@ export function ProjectPage() {
 
           <Card title='Чекпоинты'>
             <p className={styles.hint} style={{ marginBottom: 8 }}>
-              Набор: {project.checkpointGroup.title} ({project.checkpointGroup.id})
+              Набор: {project.checkpointGroup.title} ({project.checkpointGroup.id}) · по дате
             </p>
             <div className={styles.stack}>
-              {project.checkpointGroup.checkpoints.map(cp => (
-                <div key={`${cp.title}-${cp.deadline.toISOString()}`} className={styles.teamRow}>
-                  <strong>{cp.title}</strong>
-                  <span className={styles.hint}>{cp.deadline.toLocaleDateString('ru-RU')}</span>
-                </div>
-              ))}
-              {(project.customCheckpoints ?? []).map(cp => (
-                <div key={`c-${cp.title}-${cp.deadline.toISOString()}`} className={styles.teamRow}>
-                  <strong>{cp.title} (custom)</strong>
-                  <span className={styles.hint}>{cp.deadline.toLocaleDateString('ru-RU')}</span>
-                </div>
-              ))}
+              {[
+                ...project.checkpointGroup.checkpoints.map(cp => ({ ...cp, custom: false })),
+                ...(project.customCheckpoints ?? []).map(cp => ({ ...cp, custom: true }))
+              ]
+                .sort((a, b) => a.deadline.getTime() - b.deadline.getTime())
+                .map(cp => (
+                  <div
+                    key={`${cp.custom ? 'c' : 'g'}-${cp.title}-${cp.deadline.toISOString()}`}
+                    className={styles.teamRow}
+                  >
+                    <strong>
+                      {cp.title}
+                      {cp.custom ? ' (custom)' : ''}
+                    </strong>
+                    <span className={styles.hint}>{cp.deadline.toLocaleDateString('ru-RU')}</span>
+                  </div>
+                ))}
             </div>
           </Card>
         </div>

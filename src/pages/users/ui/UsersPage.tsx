@@ -1,6 +1,5 @@
 import styles from "./UsersPage.module.css"
 import {QuickActionsUsers} from "@/widgets/quick-actions";
-import {BriefAnalysis} from "@/widgets/brief-analysis";
 import {UsersList} from "@/widgets/users-list";
 
 export const UsersPage = () => {
@@ -11,7 +10,6 @@ export const UsersPage = () => {
           <UsersList />
           <aside className={styles.quickSide}>
             <QuickActionsUsers />
-            <BriefAnalysis />
           </aside>
         </div>
       </main>

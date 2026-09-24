@@ -1,132 +1,201 @@
 import { Link } from 'react-router-dom'
 import styles from './ReportsPage.module.css'
 import {
-  ALL_PROJECT_STATUSES,
+  getProjectTeamStats,
   getStatusTranslation,
-  useProjectsStatusCounts,
-  type ProjectStatus
+  useProjectsReportSnapshot,
+  type ProjectStatus,
+  type TeamReadiness
 } from '@/entities/project'
-import { useComplaints } from '@/entities/complaint'
-import { Card, ROUTES, Spinner } from '@/shared'
+import { Card, projectPath, ROUTES, Spinner } from '@/shared'
 
-const REPORT_STATUSES: ProjectStatus[] = [...ALL_PROJECT_STATUSES]
+/** Воронка: от ранних (широких) статусов к финальным */
+const FUNNEL_STATUSES: ProjectStatus[] = [
+  'pending',
+  'needsrework',
+  'recruiting',
+  'recruitmentcompleted',
+  'inprogress',
+  'completed'
+]
+
+const SIDE_STATUSES: ProjectStatus[] = ['rejected', 'notimplemented']
+
+const READINESS_ORDER: TeamReadiness[] = ['not_ready', 'core_only', 'complete']
+
+const READINESS_CLASS: Record<TeamReadiness, string> = {
+  not_ready: styles.bad,
+  core_only: styles.warn,
+  complete: styles.good
+}
 
 export const ReportsPage = () => {
-  const counts = useProjectsStatusCounts(REPORT_STATUSES)
-  const complaints = useComplaints({ offset: 0, limit: 50 })
+  const snapshot = useProjectsReportSnapshot(100)
+  const projects = snapshot.data?.projects ?? []
+  const totalKnown = snapshot.data?.total ?? projects.length
 
-  const items = complaints.data?.items ?? []
-  const pending = items.filter(c => c.status === 'Pending').length
-  const resolved = items.filter(c => c.status === 'Resolved').length
-  const dismissed = items.filter(c => c.status === 'Dismissed').length
+  const statusCounts: Record<string, number> = {}
+  for (const s of [...FUNNEL_STATUSES, ...SIDE_STATUSES]) statusCounts[s] = 0
+  for (const p of projects) {
+    if (p.status in statusCounts) statusCounts[p.status] += 1
+  }
 
-  const recruiting = counts.data?.recruiting ?? 0
-  const inProgress = counts.data?.inprogress ?? 0
-  const completed = counts.data?.completed ?? 0
-  const pendingMod = counts.data?.pending ?? 0
-  const rework = counts.data?.needsrework ?? 0
+  const readinessCounts: Record<TeamReadiness, number> = {
+    not_ready: 0,
+    core_only: 0,
+    complete: 0
+  }
+
+  const rows = projects.map(project => {
+    const stats = getProjectTeamStats(project)
+    readinessCounts[stats.readiness] += 1
+    return { project, stats }
+  })
+
+  // Детализация: сначала не готовы, потом основные, потом собраны; внутри — по статусу воронки
+  const funnelIndex = (status: string) => {
+    const i = FUNNEL_STATUSES.indexOf(status as ProjectStatus)
+    return i === -1 ? FUNNEL_STATUSES.length + SIDE_STATUSES.indexOf(status as ProjectStatus) : i
+  }
+
+  rows.sort((a, b) => {
+    const r =
+      READINESS_ORDER.indexOf(a.stats.readiness) - READINESS_ORDER.indexOf(b.stats.readiness)
+    if (r !== 0) return r
+    return funnelIndex(a.project.status) - funnelIndex(b.project.status)
+  })
+
+  const maxFunnel = Math.max(1, ...FUNNEL_STATUSES.map(s => statusCounts[s] ?? 0))
 
   return (
     <main className={styles.main}>
       <h2>Отчёты</h2>
       <p className={styles.lead}>
-        Сводка по доступным данным API: статусы проектов и жалобы. Отдельного analytics API нет —
-        цифры собраны из списков.
+        Воронка статусов и укомплектованность команд. Данные по {projects.length}
+        {totalKnown > projects.length ? ` из ${totalKnown}` : ''} проектов.
       </p>
 
-      <div className={styles.grid}>
-        <Card title='Воронка проектов' className={styles.card}>
-          {counts.isLoading ? <Spinner /> : null}
-          {counts.isError ? <p className={styles.error}>Ошибка загрузки</p> : null}
-          {counts.data ? (
-            <>
-              <div className={styles.kpiRow}>
-                <div className={styles.kpi}>
-                  <span className={styles.kpiLabel}>На модерации</span>
-                  <strong>{pendingMod}</strong>
-                </div>
-                <div className={styles.kpi}>
-                  <span className={styles.kpiLabel}>Доработка</span>
-                  <strong>{rework}</strong>
-                </div>
-                <div className={styles.kpi}>
-                  <span className={styles.kpiLabel}>Набор</span>
-                  <strong className={styles.good}>{recruiting}</strong>
-                </div>
-                <div className={styles.kpi}>
-                  <span className={styles.kpiLabel}>В работе</span>
-                  <strong className={styles.good}>{inProgress}</strong>
-                </div>
-                <div className={styles.kpi}>
-                  <span className={styles.kpiLabel}>Завершено</span>
-                  <strong className={styles.good}>{completed}</strong>
-                </div>
+      <div className={styles.topGrid}>
+        <Card title='Воронка статусов' className={styles.card}>
+          {snapshot.isLoading ? <Spinner /> : null}
+          {snapshot.isError ? <p className={styles.error}>Ошибка загрузки</p> : null}
+          {snapshot.data ? (
+            <div className={styles.funnel}>
+              {FUNNEL_STATUSES.map((status, index) => {
+                const count = statusCounts[status] ?? 0
+                const width = Math.max(12, Math.round((count / maxFunnel) * 100))
+                return (
+                  <div key={status} className={styles.funnelRow}>
+                    <div className={styles.funnelMeta}>
+                      <span className={styles.funnelStep}>{index + 1}</span>
+                      <span className={styles.funnelLabel}>{getStatusTranslation(status)}</span>
+                      <strong className={styles.funnelCount}>{count}</strong>
+                    </div>
+                    <div className={styles.funnelTrack}>
+                      <div className={styles.funnelBar} style={{ width: `${width}%` }} />
+                    </div>
+                    <Link className={styles.link} to={`${ROUTES.PROJECTS}?status=${status}`}>
+                      Открыть
+                    </Link>
+                  </div>
+                )
+              })}
+              <div className={styles.sideRow}>
+                {SIDE_STATUSES.map(status => (
+                  <Link
+                    key={status}
+                    className={styles.sideChip}
+                    to={`${ROUTES.PROJECTS}?status=${status}`}
+                  >
+                    {getStatusTranslation(status)}: <strong>{statusCounts[status] ?? 0}</strong>
+                  </Link>
+                ))}
               </div>
-              <table className={styles.table}>
-                <thead>
-                  <tr>
-                    <th>Статус</th>
-                    <th>Кол-во</th>
-                    <th />
-                  </tr>
-                </thead>
-                <tbody>
-                  {REPORT_STATUSES.map(status => (
-                    <tr key={status}>
-                      <td>{getStatusTranslation(status)}</td>
-                      <td className={styles.num}>{counts.data[status] ?? 0}</td>
-                      <td>
-                        <Link className={styles.link} to={`${ROUTES.PROJECTS}?status=${status}`}>
-                          Открыть
-                        </Link>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </>
+            </div>
           ) : null}
         </Card>
 
-        <Card title='Жалобы' className={styles.card}>
-          {complaints.isLoading ? <Spinner /> : null}
-          {complaints.isError ? <p className={styles.error}>Ошибка загрузки жалоб</p> : null}
-          {complaints.isSuccess ? (
-            <>
-              <div className={styles.kpiRow}>
-                <div className={styles.kpi}>
-                  <span className={styles.kpiLabel}>Ожидают</span>
-                  <strong className={styles.warn}>{pending}</strong>
-                </div>
-                <div className={styles.kpi}>
-                  <span className={styles.kpiLabel}>Приняты</span>
-                  <strong>{resolved}</strong>
-                </div>
-                <div className={styles.kpi}>
-                  <span className={styles.kpiLabel}>Отклонены</span>
-                  <strong>{dismissed}</strong>
-                </div>
+        <Card title='Укомплектованность команд' className={styles.card}>
+          {snapshot.isLoading ? <Spinner /> : null}
+          {snapshot.data ? (
+            <div className={styles.kpiRow}>
+              <div className={styles.kpi}>
+                <span className={styles.kpiLabel}>Не готовы</span>
+                <strong className={styles.bad}>{readinessCounts.not_ready}</strong>
+                <span className={styles.kpiHint}>мин. места не закрыты</span>
               </div>
-              <p className={styles.hint}>
-                Показаны до 50 последних жалоб. Полный список — в настройках.
-              </p>
-              <Link className={styles.more} to={ROUTES.SETTINGS.COMPLAINTS}>
-                К жалобам →
-              </Link>
-            </>
+              <div className={styles.kpi}>
+                <span className={styles.kpiLabel}>Только основные роли</span>
+                <strong className={styles.warn}>{readinessCounts.core_only}</strong>
+                <span className={styles.kpiHint}>min ok, есть свободные места</span>
+              </div>
+              <div className={styles.kpi}>
+                <span className={styles.kpiLabel}>Собраны</span>
+                <strong className={styles.good}>{readinessCounts.complete}</strong>
+                <span className={styles.kpiHint}>все места заняты</span>
+              </div>
+            </div>
           ) : null}
-        </Card>
-
-        <Card title='Студенты и баллы' className={styles.card}>
-          <p className={styles.hint}>
-            Массовой выгрузки баллов по всем студентам в API нет. Баллы конкретного пользователя
-            доступны на его карточке (`GET /users/&#123;id&#125;/scores`).
-          </p>
-          <Link className={styles.more} to={ROUTES.USERS}>
-            К пользователям →
-          </Link>
         </Card>
       </div>
+
+      <Card title='Детализация проектов' className={styles.card}>
+        {snapshot.isLoading ? <Spinner /> : null}
+        {snapshot.isError ? <p className={styles.error}>Ошибка загрузки</p> : null}
+        {snapshot.data ? (
+          <div className={styles.tableWrap}>
+            <table className={styles.table}>
+              <thead>
+                <tr>
+                  <th>Проект</th>
+                  <th>Статус</th>
+                  <th>Готовность</th>
+                  <th>Укомплектованность</th>
+                  <th>Роли</th>
+                  <th>Заявки</th>
+                </tr>
+              </thead>
+              <tbody>
+                {rows.length === 0 ? (
+                  <tr>
+                    <td colSpan={6} className={styles.empty}>
+                      Нет проектов
+                    </td>
+                  </tr>
+                ) : (
+                  rows.map(({ project, stats }) => (
+                    <tr key={project.id}>
+                      <td>
+                        <Link className={styles.projectLink} to={projectPath(project.id)}>
+                          {project.meta.title}
+                        </Link>
+                      </td>
+                      <td>{getStatusTranslation(project.status)}</td>
+                      <td>
+                        <span
+                          className={`${styles.badge} ${READINESS_CLASS[stats.readiness]}`}
+                        >
+                          {stats.readinessLabel}
+                        </span>
+                      </td>
+                      <td className={styles.num}>
+                        {stats.filled}/{stats.places}
+                        {stats.minRequired > 0 ? (
+                          <span className={styles.muted}> · min {stats.minRequired}</span>
+                        ) : null}
+                      </td>
+                      <td className={styles.roles} title={stats.rolesDetail}>
+                        {stats.rolesLabel}
+                      </td>
+                      <td className={styles.num}>{stats.applications}</td>
+                    </tr>
+                  ))
+                )}
+              </tbody>
+            </table>
+          </div>
+        ) : null}
+      </Card>
     </main>
   )
 }

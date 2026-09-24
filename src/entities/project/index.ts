@@ -6,7 +6,8 @@ export {
   useProjectById,
   useProjectTeam,
   useProjectReview,
-  useProjectsStatusCounts
+  useProjectsStatusCounts,
+  useProjectsReportSnapshot
 } from './api/queries.ts'
 export {
   updateProjectStatus,
@@ -22,3 +23,9 @@ export {
   toApiStatus
 } from './lib/getStatusTranslation.ts'
 export { getTypeTranslation } from './lib/getTypeTranslation.ts'
+export {
+  getProjectTeamStats,
+  getReadinessLabel,
+  type TeamReadiness,
+  type ProjectTeamStats
+} from './lib/teamStats.ts'

@@ -9,12 +9,9 @@ interface CheckpointGroupCardProps extends ComponentPropsWithoutRef<'div'> {
 }
 
 export function CheckpointGroupCard({ group, actions, children, className, ...props }: CheckpointGroupCardProps) {
-  const renderCheckpoints = () =>
-    group.checkpoints.map(c => (
-      <li key={c.title}>
-        <CheckpointRow checkpoint={c} />
-      </li>
-    )) // TODO проверить, валидируется ли на бэкенде
+  const sorted = [...group.checkpoints].sort(
+    (a, b) => a.deadline.getTime() - b.deadline.getTime()
+  )
 
   return (
     <div className={`${styles.container} ${className ?? ''}`} {...props}>
@@ -22,7 +19,13 @@ export function CheckpointGroupCard({ group, actions, children, className, ...pr
         <h5 className={styles.title}>{group.title}</h5>
         <div className={styles.actions}>{actions}</div>
       </div>
-      <ul className={styles.list}>{renderCheckpoints()}</ul>
+      <ul className={styles.list}>
+        {sorted.map(c => (
+          <li key={`${c.title}-${c.deadline.toISOString()}`}>
+            <CheckpointRow checkpoint={c} />
+          </li>
+        ))}
+      </ul>
       {children}
     </div>
   )

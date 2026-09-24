@@ -110,3 +110,17 @@ export const useProjectsStatusCounts = (statuses: string[]) => {
     staleTime: 60 * 1000
   })
 }
+
+/** Снимок проектов для отчётов (воронка + укомплектованность). */
+export const useProjectsReportSnapshot = (limit = 100) => {
+  return useQuery({
+    queryKey: [...queryKeys.reportSnapshot(), { limit }] as const,
+    queryFn: () =>
+      getProjects({
+        offset: 0,
+        limit,
+        sort: 'created_desc'
+      }),
+    staleTime: 60 * 1000
+  })
+}

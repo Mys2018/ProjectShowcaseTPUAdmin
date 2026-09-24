@@ -7,5 +7,6 @@ export const queryKeys = {
   team: (id: string) => [...queryKeys.all, 'team', id] as const,
   review: (id: string) => [...queryKeys.all, 'review', id] as const,
   user: (userId: string) => [...queryKeys.all, 'user', userId] as const,
-  userList: (userId: string, params: object) => [...queryKeys.user(userId), params] as const
+  userList: (userId: string, params: object) => [...queryKeys.user(userId), params] as const,
+  reportSnapshot: () => [...queryKeys.all, 'report-snapshot'] as const
 }
